@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432270953579",
+    "project_id": "livisync-c4f15",
+    "storage_bucket": "livisync-c4f15.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432270953579:android:a92dd0482380405d92352e",
+        "android_client_info": {
+          "package_name": "com.livisync.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvyYfQ36hZ2N0u970BP5TnBnE9RZ_PYcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
