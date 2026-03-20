@@ -17,23 +17,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNav = findViewById(R.id.bottomNavigationView);
-
-        // Load home fragment by default
         loadFragment(new HomeFragment());
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.nav_search) {
-                loadFragment(new HomeFragment());
-            } else if (id == R.id.nav_requests) {
+            if (id == R.id.search) {
+                loadFragment(new SearchFragment());
+            } else if (id == R.id.req) {
                 loadFragment(new RequestsFragment());
-            } else if (id == R.id.nav_chat) {
+            } else if (id == R.id.chats) {
                 loadFragment(new ChatFragment());
-            } else if (id == R.id.nav_admin) {
-                loadFragment(new AdminFragment());
-            } else if (id == R.id.nav_profile) {
+            } else if (id == R.id.profile) {
                 loadFragment(new ProfileFragment());
+            }
+            else if(id==R.id.mainhome)
+            {
+                loadFragment(new HomeFragment());
             }
             return true;
         });
