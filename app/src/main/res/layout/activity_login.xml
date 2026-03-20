@@ -1,41 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#F0F7F5">
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_marginBottom="12dp"/>
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_marginBottom="20dp"/>
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:backgroundTint="#2D9B8A"/>
-
+    android:background="@color/black"
+    android:fitsSystemWindows="true">
     <TextView
-        android:id="@+id/tvGoToRegister"
+        android:id="@+id/txtGetStarted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? Register"
-        android:textColor="#2D9B8A"
-        android:layout_marginTop="16dp"/>
+        android:text="Get Started"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="24dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLogin"
+        android:text="Create an account or log in to continue"
+        android:layout_below="@id/txtGetStarted"
+        android:layout_marginStart="24dp"
+        android:textSize="14sp"
+        android:textColor="#A0A0A0"
+        android:layout_marginTop="10dp" />
 
-</LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtLogin"
+        android:layout_marginTop="60dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="24dp"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp">
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/tabLayout"
+                app:tabIndicatorHeight="0dp"
+                android:background="@drawable/bg_toggle_container"
+                app:tabBackground="@drawable/bg_toggle_selected"
+                app:tabSelectedTextColor="@color/black"
+                app:tabTextColor="#1A1A1A"/>
+            <androidx.viewpager2.widget.ViewPager2
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/viewPager"
+                android:layout_marginTop="16dp"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>
