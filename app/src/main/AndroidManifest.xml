@@ -22,7 +22,6 @@
         </activity>
 
         <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ProfileSetupActivity" />
         <activity android:name=".PreferencesActivity" />
