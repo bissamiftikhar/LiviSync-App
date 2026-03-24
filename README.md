@@ -120,3 +120,12 @@ Build → Make Project   (Ctrl + F9)
 Run   → Run 'app'      (Shift + F10)
 ```
 
+---
+ 
+## 👥 Team
+ 
+| Member | Role |
+|---|---|
+| **Awais** | Project Lead & System Architect |
+| **Bissam** | Frontend Developer & Requirements Engineer |
+| **Muaz** | QA Tester & Android Developer |
