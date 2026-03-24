@@ -75,7 +75,7 @@ com.livisync.app/
 Bottom navigation bar with 5 tabs using custom XML drawables:
 
 ```
-🏠 Home   🔍 Search   💬 Chat   🔔 Notifications   👤 Profile
+🏠 Home   🔍 Search   💬 Chat   🔔 Requests   👤 Profile
 ```
 
 Defined in `res/menu/bottom_nav_menu.xml` with custom icons in `res/drawable/`.
@@ -124,8 +124,8 @@ Run   → Run 'app'      (Shift + F10)
  
 ## 👥 Team
  
-| Member | Role |
-|---|---|
-| **Awais** | Project Lead & System Architect |
-| **Bissam** | Frontend Developer & Requirements Engineer |
-| **Muaz** | QA Tester & Android Developer |
+| Member     | Role |
+|------------|---|
+| **Awais**  | Project Lead & System Architect |
+| **Muaz**   | Frontend Developer & Requirements Engineer |
+| **Bissam** | QA Tester & Android Developer |
