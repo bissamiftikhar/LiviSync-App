@@ -1,23 +1,30 @@
 package com.livisync.app;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
 
-    TextView tvAvatar, tvName, tvCityDept, tvSleep, tvCleanliness, tvBudget, tvGuests, tvPets;
+    TextView tvName, tvCityDept, tvSleep, tvCleanliness, tvBudget, tvGuests, tvPets;
+    ImageView tvAvatar;
     Button btnEditProfile, btnLogout;
     FirebaseFirestore db;
     String uid;
@@ -27,7 +34,11 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         db = FirebaseFirestore.getInstance();
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return view;
+        }
+        uid = currentUser.getUid();
 
         tvAvatar = view.findViewById(R.id.tvAvatar);
         tvName = view.findViewById(R.id.tvName);
@@ -40,6 +51,7 @@ public class ProfileFragment extends Fragment {
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnLogout = view.findViewById(R.id.btnLogout);
 
+        setAvatarFallback();
         loadProfile();
 
         btnEditProfile.setOnClickListener(v -> {
@@ -49,7 +61,7 @@ public class ProfileFragment extends Fragment {
         btnLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
-            getActivity().finish();
+            requireActivity().finish();
         });
 
         return view;
@@ -63,17 +75,15 @@ public class ProfileFragment extends Fragment {
                     if (doc.exists()) {
                         String name = doc.getString("name");
                         String city = doc.getString("city") != null ? doc.getString("city") : "";
+                        String photoUrl = doc.getString("photoUrl");
 
                         tvName.setText(name);
-                        tvCityDept.setText("CS Student • " + city);
+                        tvCityDept.setText("CS Student" + city);
 
-                        // Set avatar initials
-                        if (name != null && !name.isEmpty()) {
-                            String initials = String.valueOf(name.charAt(0)).toUpperCase();
-                            if (name.contains(" ")) {
-                                initials += String.valueOf(name.split(" ")[1].charAt(0)).toUpperCase();
-                            }
-                            tvAvatar.setText(initials);
+                        if (photoUrl != null && !photoUrl.trim().isEmpty()) {
+                            loadAvatar(photoUrl.trim());
+                        } else {
+                            setAvatarFallback();
                         }
                     }
                 });
@@ -98,9 +108,34 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+    private void loadAvatar(String photoUrl) {
+        Glide.with(this)
+                .load(photoUrl)
+                .circleCrop()
+                .listener(new RequestListener<android.graphics.drawable.Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(GlideException e, Object model, Target<android.graphics.drawable.Drawable> target, boolean isFirstResource) {
+                        setAvatarFallback();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(android.graphics.drawable.Drawable resource, Object model, Target<android.graphics.drawable.Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        tvAvatar.clearColorFilter();
+                        return false;
+                    }
+                })
+                .into(tvAvatar);
+    }
+
+    private void setAvatarFallback() {
+        tvAvatar.setImageResource(R.drawable.profile);
+        tvAvatar.setColorFilter(Color.WHITE);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        loadProfile(); // Refresh when coming back from edit
+        loadProfile();
     }
 }
