@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F0F7F5">
 
     <LinearLayout
@@ -16,7 +17,7 @@
             android:text="Your Preferences"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#2D9B8A"
+            android:textColor="@color/black"
             android:layout_marginBottom="24dp"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sleep Schedule" android:textStyle="bold" android:layout_marginBottom="4dp"/>
@@ -65,19 +66,21 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"/>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Guests Allowed?" android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Frequent Guests Allowed?" android:textStyle="bold"/>
         <Switch
             android:id="@+id/swGuests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"/>
-
         <Button
-            android:id="@+id/btnSavePrefs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:id="@+id/btnSavePrefs"
             android:text="Finish Setup"
-            android:backgroundTint="#2D9B8A"/>
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white"
+            app:cornerRadius="12dp"
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 </ScrollView>

@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">LiviSync</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="profile_title">My Profile</string>
+    <string name="profile_subtitle">View and manage your details</string>
+    <string name="profile_avatar_cd">Profile avatar initials</string>
+    <string name="profile_loading">Loading</string>
+    <string name="profile_sleep_placeholder">Sleep: -</string>
+    <string name="profile_cleanliness_placeholder">Cleanliness: -</string>
+    <string name="profile_budget_placeholder">Budget: -</string>
+    <string name="profile_guests_placeholder">Guests: -</string>
+    <string name="profile_pets_placeholder">Pets: -</string>
+    <string name="profile_edit_button">Edit Profile</string>
+    <string name="profile_logout_button">Logout</string>
 </resources>
