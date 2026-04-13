@@ -1,6 +1,7 @@
 package com.livisync.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +12,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
+
+    private static final String TAG = "EditProfileActivity";
 
     EditText etName, etAge, etBio, etBudgetMin, etBudgetMax, etCity;
     Spinner spGender, spSleep, spCleanliness;
@@ -35,7 +41,8 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         db = FirebaseFirestore.getInstance();
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        uid = currentUser != null ? currentUser.getUid() : null;
 
         etName = findViewById(R.id.etName);
         etAge = findViewById(R.id.etAge);
@@ -120,6 +127,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
+        if (uid == null || uid.isEmpty()) {
+            Toast.makeText(this, "You must be logged in to save changes.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String name = etName.getText().toString().trim();
         String age = etAge.getText().toString().trim();
         String bio = etBio.getText().toString().trim();
@@ -133,6 +145,22 @@ public class EditProfileActivity extends AppCompatActivity {
         if (budgetMin.isEmpty()) { etBudgetMin.setError("Required"); return; }
         if (budgetMax.isEmpty()) { etBudgetMax.setError("Required"); return; }
 
+        int parsedBudgetMin;
+        int parsedBudgetMax;
+        try {
+            parsedBudgetMin = Integer.parseInt(budgetMin);
+            parsedBudgetMax = Integer.parseInt(budgetMax);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Budget values must be numbers.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (parsedBudgetMin > parsedBudgetMax) {
+            etBudgetMin.setError("Must be <= max");
+            etBudgetMax.setError("Must be >= min");
+            return;
+        }
+
         // Save to users collection
         Map<String, Object> userUpdates = new HashMap<>();
         userUpdates.put("name", name);
@@ -140,28 +168,30 @@ public class EditProfileActivity extends AppCompatActivity {
         userUpdates.put("bio", bio);
         userUpdates.put("gender", spGender.getSelectedItem().toString());
 
-        db.collection("users").document(uid)
-                .update(userUpdates);
-
         // Save to preferences collection
         Map<String, Object> prefUpdates = new HashMap<>();
         prefUpdates.put("sleepSchedule", spSleep.getSelectedItem().toString());
         prefUpdates.put("cleanliness", spCleanliness.getSelectedItemPosition() + 1);
-        prefUpdates.put("budgetMin", Integer.parseInt(budgetMin));
-        prefUpdates.put("budgetMax", Integer.parseInt(budgetMax));
+        prefUpdates.put("budgetMin", parsedBudgetMin);
+        prefUpdates.put("budgetMax", parsedBudgetMax);
         prefUpdates.put("city", city);
         prefUpdates.put("smokingAllowed", swSmoking.isChecked());
         prefUpdates.put("petsAllowed", swPets.isChecked());
         prefUpdates.put("guestsAllowed", swGuests.isChecked());
 
-        db.collection("preferences").document(uid)
-                .update(prefUpdates)
+        // Use an atomic upsert so missing documents are created instead of failing on update().
+        WriteBatch batch = db.batch();
+        batch.set(db.collection("users").document(uid), userUpdates, SetOptions.merge());
+        batch.set(db.collection("preferences").document(uid), prefUpdates, SetOptions.merge());
+
+        batch.commit()
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Profile updated!", Toast.LENGTH_SHORT).show();
                     finish(); // go back to profile fragment
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to save profile", e);
                 });
     }
 }
